@@ -1,0 +1,44 @@
+name: Auto build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "recipes/**"
+      - "builder/**"
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  changed-recipes:
+    runs-on: ubuntu-24.04
+    outputs:
+      apps: ${{ steps.find.outputs.apps }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - id: find
+        run: |
+          base="${{ github.event.before }}"
+          if [[ -z "$base" || "$base" == "0000000000000000000000000000000000000000" ]]; then
+            base="HEAD~1"
+          fi
+          apps="$(git diff --name-only "$base" HEAD -- 'recipes/*/build.yaml' \
+            | cut -d/ -f2 | sort -u | jq -R . | jq -sc .)"
+          [[ "$apps" == "[]" ]] && apps='["nmap"]'
+          echo "apps=${apps}" >> "$GITHUB_OUTPUT"
+  build:
+    needs: changed-recipes
+    strategy:
+      fail-fast: false
+      matrix:
+        application: ${{ fromJSON(needs.changed-recipes.outputs.apps) }}
+    uses: ./.github/workflows/build-app.yml
+    with:
+      application: ${{ matrix.application }}
+      push: true
+    secrets: inherit
+

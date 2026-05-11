@@ -1,0 +1,327 @@
+{
+    "aircrack-ng": {
+        "apps": {
+            "aircrack-ng rolling": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "wireless"
+        ]
+    },
+    "autopsy": {
+        "apps": {
+            "autopsy rolling": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            },
+            "autopsyGUI-autopsy rolling": {
+                "version": "20260511",
+                "exec": "autopsy",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "forensics"
+        ]
+    },
+    "binwalk": {
+        "apps": {
+            "binwalk rolling": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "hardware"
+        ]
+    },
+    "burpsuite": {
+        "apps": {
+            "burpsuite rolling": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            },
+            "burpsuiteGUI-burpsuite rolling": {
+                "version": "20260511",
+                "exec": "burpsuite",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "web applications"
+        ]
+    },
+    "enum4linux-ng": {
+        "apps": {
+            "enum4linux-ng rolling": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "information gathering"
+        ]
+    },
+    "exploitdb": {
+        "apps": {
+            "exploitdb rolling": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "exploitation"
+        ]
+    },
+    "ffuf": {
+        "apps": {
+            "ffuf rolling": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "web applications"
+        ]
+    },
+    "ghidra": {
+        "apps": {
+            "ghidra rolling": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            },
+            "ghidraGUI-ghidra rolling": {
+                "version": "20260511",
+                "exec": "ghidra",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "reverse engineering"
+        ]
+    },
+    "gobuster": {
+        "apps": {
+            "gobuster rolling": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "web applications"
+        ]
+    },
+    "hashcat": {
+        "apps": {
+            "hashcat rolling": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "password attacks"
+        ]
+    },
+    "hydra": {
+        "apps": {
+            "hydra rolling": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "password attacks"
+        ]
+    },
+    "impacket-scripts": {
+        "apps": {
+            "impacket-scripts rolling": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "post exploitation"
+        ]
+    },
+    "john": {
+        "apps": {
+            "john rolling": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "password attacks"
+        ]
+    },
+    "metasploit-framework": {
+        "apps": {
+            "metasploit-framework rolling": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "exploitation"
+        ]
+    },
+    "netcat-traditional": {
+        "apps": {
+            "netcat-traditional rolling": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "exploitation"
+        ]
+    },
+    "netexec": {
+        "apps": {
+            "netexec rolling": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "exploitation"
+        ]
+    },
+    "nikto": {
+        "apps": {
+            "nikto rolling": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "vulnerability analysis"
+        ]
+    },
+    "nmap": {
+        "apps": {
+            "nmap 7.95": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "information gathering"
+        ]
+    },
+    "nuclei": {
+        "apps": {
+            "nuclei rolling": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "vulnerability analysis"
+        ]
+    },
+    "responder": {
+        "apps": {
+            "responder rolling": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "sniffing spoofing"
+        ]
+    },
+    "sqlmap": {
+        "apps": {
+            "sqlmap rolling": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "database assessment"
+        ]
+    },
+    "tcpdump": {
+        "apps": {
+            "tcpdump rolling": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "sniffing spoofing"
+        ]
+    },
+    "wireshark": {
+        "apps": {
+            "wireshark rolling": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            },
+            "wiresharkGUI-wireshark rolling": {
+                "version": "20260511",
+                "exec": "wireshark",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "sniffing spoofing"
+        ]
+    },
+    "wpscan": {
+        "apps": {
+            "wpscan rolling": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "web applications"
+        ]
+    },
+    "zaproxy": {
+        "apps": {
+            "zaproxy rolling": {
+                "version": "20260511",
+                "exec": "",
+                "apptainer_args": []
+            },
+            "zaproxyGUI-zaproxy rolling": {
+                "version": "20260511",
+                "exec": "zaproxy",
+                "apptainer_args": []
+            }
+        },
+        "categories": [
+            "web applications"
+        ]
+    }
+}

@@ -1,0 +1,17 @@
+{
+  "apps": {
+    "wireshark rolling": {
+      "version": "20260511",
+      "exec": "",
+      "apptainer_args": []
+    },
+    "wiresharkGUI-wireshark rolling": {
+      "version": "20260511",
+      "exec": "wireshark",
+      "apptainer_args": []
+    }
+  },
+  "categories": [
+    "sniffing spoofing"
+  ]
+}

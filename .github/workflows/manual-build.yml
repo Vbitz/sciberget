@@ -1,0 +1,41 @@
+name: Manual build
+
+on:
+  workflow_dispatch:
+    inputs:
+      applications:
+        description: Comma-separated recipe names
+        required: true
+        type: string
+      push:
+        description: Push Docker images to GHCR
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  matrix:
+    runs-on: ubuntu-24.04
+    outputs:
+      apps: ${{ steps.apps.outputs.apps }}
+    steps:
+      - id: apps
+        run: |
+          apps="$(echo "${{ inputs.applications }}" | tr -d ' ' | jq -Rc 'split(",")')"
+          echo "apps=${apps}" >> "$GITHUB_OUTPUT"
+  build:
+    needs: matrix
+    strategy:
+      fail-fast: false
+      matrix:
+        application: ${{ fromJSON(needs.matrix.outputs.apps) }}
+    uses: ./.github/workflows/build-app.yml
+    with:
+      application: ${{ matrix.application }}
+      push: ${{ inputs.push }}
+    secrets: inherit
+

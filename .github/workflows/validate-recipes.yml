@@ -1,0 +1,35 @@
+name: Validate recipes
+
+on:
+  pull_request:
+    paths:
+      - "recipes/**/*.yaml"
+      - "recipes/**/*.yml"
+      - "builder/validation.py"
+  push:
+    paths:
+      - "recipes/**/*.yaml"
+      - "recipes/**/*.yml"
+      - "builder/validation.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install validation dependencies
+        run: python -m pip install attrs pyyaml jinja2
+      - name: Validate all recipes
+        run: |
+          set -euo pipefail
+          for f in recipes/*/build.yaml; do
+            python builder/validation.py "$f"
+          done
+

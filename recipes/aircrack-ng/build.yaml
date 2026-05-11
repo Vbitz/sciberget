@@ -1,0 +1,40 @@
+name: aircrack-ng
+version: "rolling"
+
+architectures:
+  - x86_64
+
+categories:
+  - wireless
+
+build:
+  kind: neurodocker
+  base-image: kalilinux/kali-rolling:latest
+  pkg-manager: apt
+  directives:
+    - environment:
+        DEBIAN_FRONTEND: noninteractive
+    - install:
+        - ca-certificates
+        - aircrack-ng
+    - run:
+        - command -v aircrack-ng
+        - command -v airmon-ng
+        - command -v airodump-ng
+        - command -v aireplay-ng
+        - apt-get clean
+        - rm -rf /var/lib/apt/lists/*
+
+deploy:
+  bins:
+    - aircrack-ng
+    - airdecap-ng
+    - aireplay-ng
+    - airmon-ng
+    - airodump-ng
+
+readme: |
+  ## aircrack-ng/{{ context.version }}
+
+  Wireless assessment suite from Kali Linux.
+

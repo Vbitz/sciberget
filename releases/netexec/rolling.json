@@ -1,0 +1,12 @@
+{
+  "apps": {
+    "netexec rolling": {
+      "version": "20260511",
+      "exec": "",
+      "apptainer_args": []
+    }
+  },
+  "categories": [
+    "exploitation"
+  ]
+}

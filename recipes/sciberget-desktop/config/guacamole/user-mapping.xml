@@ -1,0 +1,11 @@
+<user-mapping>
+    <authorize username="sciberget" password="sciberget">
+        <connection name="sci-ber-get Desktop">
+            <protocol>vnc</protocol>
+            <param name="hostname">127.0.0.1</param>
+            <param name="port">5901</param>
+            <param name="password">SCIBERGET_VNC_PASSWORD</param>
+            <param name="disable-display-resize">true</param>
+        </connection>
+    </authorize>
+</user-mapping>

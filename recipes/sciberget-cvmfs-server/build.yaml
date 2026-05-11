@@ -1,0 +1,76 @@
+name: sciberget-cvmfs-server
+version: "0.1.0"
+
+architectures:
+  - x86_64
+
+categories:
+  - other
+
+build:
+  kind: neurodocker
+  base-image: ubuntu:24.04
+  pkg-manager: apt
+  directives:
+    - environment:
+        DEBIAN_FRONTEND: noninteractive
+        SCIBERGET_CVMFS_REPO: sciberget.local
+        SCIBERGET_PUBLIC_URL: http://127.0.0.1/cvmfs/@fqrn@
+        SCIBERGET_AUTO_INIT: "true"
+    - install:
+        - apache2
+        - ca-certificates
+        - curl
+        - kmod
+        - lsof
+        - procps
+        - rsync
+        - sudo
+        - uuid-runtime
+        - wget
+    - run:
+        - |
+          wget -q https://cvmrepo.s3.cern.ch/cvmrepo/apt/cvmfs-release-latest_all.deb -O /tmp/cvmfs-release.deb
+          dpkg -i /tmp/cvmfs-release.deb
+          rm /tmp/cvmfs-release.deb
+          apt-get update
+          apt-get install -y --no-install-recommends cvmfs cvmfs-server
+          apt-get clean
+          rm -rf /var/lib/apt/lists/*
+    - copy:
+        - entrypoint.sh
+        - /usr/local/bin/sciberget-cvmfs-server
+    - copy:
+        - cvmfs
+        - /opt/sciberget/cvmfs
+    - copy:
+        - apps.json
+        - /opt/sciberget/apps.json
+    - run:
+        - |
+          chmod +x /usr/local/bin/sciberget-cvmfs-server
+          usermod -s /bin/bash cvmfs
+          mkdir -p /srv/cvmfs /var/spool/cvmfs /etc/cvmfs/repositories.d /var/www/html/cvmfs
+          sed -ri 's/^Listen 80$/Listen 0.0.0.0:80/' /etc/apache2/ports.conf
+          a2enmod expires headers
+    - entrypoint: /usr/local/bin/sciberget-cvmfs-server
+
+readme: |
+  ## sciberget-cvmfs-server/{{ context.version }}
+
+  Local-network CVMFS Stratum 0/HTTP server for sci-ber-get development.
+  Intended to run in a VM or a privileged Docker container with persistent
+  `/srv/cvmfs`, `/var/spool/cvmfs`, and `/etc/cvmfs` volumes.
+
+  Local build:
+  ```
+  python3 builder/build.py generate sciberget-cvmfs-server --recreate
+  docker build -f build/sciberget-cvmfs-server/sciberget-cvmfs-server_0.1.0.Dockerfile \
+    -t sciberget-cvmfs-server:latest build/sciberget-cvmfs-server
+  docker run --rm -it --privileged -p 8081:80 \
+    -e SCIBERGET_CVMFS_REPO=sciberget.local \
+    -v sciberget-cvmfs-srv:/srv/cvmfs \
+    -v sciberget-cvmfs-spool:/var/spool/cvmfs \
+    -v sciberget-cvmfs-etc:/etc/cvmfs \
+    sciberget-cvmfs-server:latest
+  ```

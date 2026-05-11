@@ -1,0 +1,33 @@
+name: nuclei
+version: "rolling"
+
+architectures:
+  - x86_64
+
+categories:
+  - vulnerability analysis
+
+build:
+  kind: neurodocker
+  base-image: kalilinux/kali-rolling:latest
+  pkg-manager: apt
+  directives:
+    - environment:
+        DEBIAN_FRONTEND: noninteractive
+    - install:
+        - ca-certificates
+        - nuclei
+    - run:
+        - command -v nuclei
+        - apt-get clean
+        - rm -rf /var/lib/apt/lists/*
+
+deploy:
+  bins:
+    - nuclei
+
+readme: |
+  ## nuclei/{{ context.version }}
+
+  Template-based vulnerability scanner from Kali Linux.
+

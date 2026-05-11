@@ -1,0 +1,12 @@
+/local
+build/
+config.ini
+__pycache__/
+*.pyc
+*.Dockerfile
+*.Singularity
+*.sif
+*.simg
+*.egg-info/
+.DS_Store
+.cache/

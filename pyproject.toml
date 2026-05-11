@@ -1,0 +1,36 @@
+[project]
+name = "sciberget"
+version = "0.1.0"
+description = "sci-ber-get YAML build system for Kali-based security tool containers"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "jinja2>=3.1.6",
+    "pyyaml>=6.0.2",
+    "neurodocker>=2.0.2",
+    "attrs>=23.0.0",
+]
+
+[tool.setuptools]
+packages = ["builder"]
+
+[tool.uv]
+package = true
+
+[project.scripts]
+    sf-generate = "builder.build:generate_main"
+    sf-build = "builder.build:build_main"
+    sf-login = "builder.build:login_main"
+    sf-test = "builder.build:test_main"
+    sf-test-remote = "builder.build:test_remote_main"
+    sf-init = "builder.build:init_main"
+    sf-make = "builder.build:sf_make_main"
+    sf-cache = "builder.build:cache_main"
+    sbg-generate = "builder.build:generate_main"
+    sbg-build = "builder.build:build_main"
+    sbg-login = "builder.build:login_main"
+    sbg-test = "builder.build:test_main"
+    sbg-test-remote = "builder.build:test_remote_main"
+    sbg-init = "builder.build:init_main"
+    sbg-make = "builder.build:sf_make_main"
+    sbg-cache = "builder.build:cache_main"

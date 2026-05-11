@@ -1,0 +1,17 @@
+{
+  "apps": {
+    "zaproxy rolling": {
+      "version": "20260511",
+      "exec": "",
+      "apptainer_args": []
+    },
+    "zaproxyGUI-zaproxy rolling": {
+      "version": "20260511",
+      "exec": "zaproxy",
+      "apptainer_args": []
+    }
+  },
+  "categories": [
+    "web applications"
+  ]
+}

@@ -1,0 +1,33 @@
+name: wpscan
+version: "rolling"
+
+architectures:
+  - x86_64
+
+categories:
+  - web applications
+
+build:
+  kind: neurodocker
+  base-image: kalilinux/kali-rolling:latest
+  pkg-manager: apt
+  directives:
+    - environment:
+        DEBIAN_FRONTEND: noninteractive
+    - install:
+        - ca-certificates
+        - wpscan
+    - run:
+        - command -v wpscan
+        - apt-get clean
+        - rm -rf /var/lib/apt/lists/*
+
+deploy:
+  bins:
+    - wpscan
+
+readme: |
+  ## wpscan/{{ context.version }}
+
+  WordPress security scanner from Kali Linux.
+

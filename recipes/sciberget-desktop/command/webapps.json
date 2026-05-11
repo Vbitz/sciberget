@@ -1,0 +1,52 @@
+{
+  "version": "1.0",
+  "webapps": {
+    "dicompare": {
+      "title": "dicompare",
+      "icon": "https://raw.githubusercontent.com/NeuroDesk/neurocontainers/main/recipes/dicompare/icon.svg",
+      "startup_command": "dicompare start",
+      "startup_timeout": 120,
+      "description": "MRI protocol validation tool - validate DICOMs against community protocols",
+      "port": 3001,
+      "module": "dicompare",
+      "version": "0.5.4"
+    },
+    "ezbids": {
+      "title": "ezBIDS",
+      "icon": "https://raw.githubusercontent.com/NeuroDesk/neurocontainers/main/recipes/ezbids/icon.svg",
+      "startup_command": "ezbids start",
+      "start_page": "/ezbids/",
+      "startup_timeout": 300,
+      "description": "Web-based DICOM to BIDS conversion tool",
+      "port": 3000,
+      "additional_proxies": [
+        {
+          "path": "ezbids/api",
+          "port": 8082
+        }
+      ],
+      "module": "ezbids",
+      "version": "1.1.0"
+    },
+    "qsmbly": {
+      "title": "QSMbly",
+      "icon": "https://raw.githubusercontent.com/NeuroDesk/neurocontainers/main/recipes/qsmbly/icon.svg",
+      "startup_command": "qsmbly start",
+      "startup_timeout": 120,
+      "description": "Browser-based Quantitative Susceptibility Mapping using WebAssembly",
+      "port": 3001,
+      "module": "qsmbly",
+      "version": "0.11.1"
+    },
+    "rstudio": {
+      "title": "RStudio Server",
+      "icon": "https://raw.githubusercontent.com/NeuroDesk/neurocontainers/main/recipes/rstudio/icon.svg",
+      "startup_command": "rstudio-server-start",
+      "startup_timeout": 120,
+      "description": "RStudio IDE for R - web-based version",
+      "port": 8787,
+      "module": "rstudio",
+      "version": "2023.12.1"
+    }
+  }
+}

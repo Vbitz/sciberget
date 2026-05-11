@@ -1,0 +1,31 @@
+name: Update apps.json
+
+on:
+  pull_request:
+    paths:
+      - "releases/**/*.json"
+    types: [closed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Regenerate apps.json and CVMFS log
+        run: |
+          python tools/generate_apps_json.py --releases-dir releases --output apps.json
+          python cvmfs/generate_log.py --apps-json apps.json --output cvmfs/log.txt
+      - name: Commit updates
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: "Update app catalogue"
+          file_pattern: "apps.json cvmfs/log.txt"
+

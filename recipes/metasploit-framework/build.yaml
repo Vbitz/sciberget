@@ -1,0 +1,44 @@
+name: metasploit-framework
+version: "rolling"
+
+architectures:
+  - x86_64
+
+categories:
+  - exploitation
+
+build:
+  kind: neurodocker
+  base-image: kalilinux/kali-rolling:latest
+  pkg-manager: apt
+  directives:
+    - environment:
+        DEBIAN_FRONTEND: noninteractive
+    - install:
+        - ca-certificates
+        - metasploit-framework
+    - run:
+        - command -v msfconsole
+        - command -v msfvenom
+        - command -v msfdb
+        - apt-get clean
+        - rm -rf /var/lib/apt/lists/*
+
+deploy:
+  bins:
+    - msfconsole
+    - msfvenom
+    - msfdb
+    - msfrpcd
+
+readme: |
+  ## metasploit-framework/{{ context.version }}
+
+  Metasploit Framework from Kali Linux.
+
+  Examples:
+  ```
+  msfconsole --version
+  msfvenom --help
+  ```
+

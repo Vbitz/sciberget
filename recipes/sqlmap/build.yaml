@@ -1,0 +1,33 @@
+name: sqlmap
+version: "rolling"
+
+architectures:
+  - x86_64
+
+categories:
+  - database assessment
+
+build:
+  kind: neurodocker
+  base-image: kalilinux/kali-rolling:latest
+  pkg-manager: apt
+  directives:
+    - environment:
+        DEBIAN_FRONTEND: noninteractive
+    - install:
+        - ca-certificates
+        - sqlmap
+    - run:
+        - command -v sqlmap
+        - apt-get clean
+        - rm -rf /var/lib/apt/lists/*
+
+deploy:
+  bins:
+    - sqlmap
+
+readme: |
+  ## sqlmap/{{ context.version }}
+
+  Automated SQL injection assessment tool from Kali Linux.
+

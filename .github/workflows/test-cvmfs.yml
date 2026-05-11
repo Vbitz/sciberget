@@ -1,0 +1,22 @@
+name: Test CVMFS config
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "cvmfs/**"
+      - "config/cvmfs/**"
+      - "apps.json"
+
+permissions:
+  contents: read
+
+jobs:
+  dry-run:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - name: Generate log
+        run: python cvmfs/generate_log.py --apps-json apps.json --output cvmfs/log.txt
+      - name: Syntax check CVMFS scripts
+        run: bash -n cvmfs/sync_containers_to_cvmfs.sh

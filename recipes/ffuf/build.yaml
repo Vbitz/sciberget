@@ -1,0 +1,33 @@
+name: ffuf
+version: "rolling"
+
+architectures:
+  - x86_64
+
+categories:
+  - web applications
+
+build:
+  kind: neurodocker
+  base-image: kalilinux/kali-rolling:latest
+  pkg-manager: apt
+  directives:
+    - environment:
+        DEBIAN_FRONTEND: noninteractive
+    - install:
+        - ca-certificates
+        - ffuf
+    - run:
+        - command -v ffuf
+        - apt-get clean
+        - rm -rf /var/lib/apt/lists/*
+
+deploy:
+  bins:
+    - ffuf
+
+readme: |
+  ## ffuf/{{ context.version }}
+
+  Fast web fuzzer from Kali Linux.
+

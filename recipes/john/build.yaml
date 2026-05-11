@@ -1,0 +1,33 @@
+name: john
+version: "rolling"
+
+architectures:
+  - x86_64
+
+categories:
+  - password attacks
+
+build:
+  kind: neurodocker
+  base-image: kalilinux/kali-rolling:latest
+  pkg-manager: apt
+  directives:
+    - environment:
+        DEBIAN_FRONTEND: noninteractive
+    - install:
+        - ca-certificates
+        - john
+    - run:
+        - command -v john
+        - apt-get clean
+        - rm -rf /var/lib/apt/lists/*
+
+deploy:
+  bins:
+    - john
+
+readme: |
+  ## john/{{ context.version }}
+
+  John the Ripper password auditing tool from Kali Linux.
+

@@ -1,0 +1,37 @@
+name: autopsy
+version: "rolling"
+
+architectures:
+  - x86_64
+
+categories:
+  - forensics
+
+gui_apps:
+  - name: autopsyGUI
+    exec: autopsy
+
+build:
+  kind: neurodocker
+  base-image: kalilinux/kali-rolling:latest
+  pkg-manager: apt
+  directives:
+    - environment:
+        DEBIAN_FRONTEND: noninteractive
+    - install:
+        - ca-certificates
+        - autopsy
+    - run:
+        - command -v autopsy
+        - apt-get clean
+        - rm -rf /var/lib/apt/lists/*
+
+deploy:
+  bins:
+    - autopsy
+
+readme: |
+  ## autopsy/{{ context.version }}
+
+  Digital forensics browser interface from Kali Linux.
+

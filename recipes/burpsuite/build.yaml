@@ -1,0 +1,37 @@
+name: burpsuite
+version: "rolling"
+
+architectures:
+  - x86_64
+
+categories:
+  - web applications
+
+gui_apps:
+  - name: burpsuiteGUI
+    exec: burpsuite
+
+build:
+  kind: neurodocker
+  base-image: kalilinux/kali-rolling:latest
+  pkg-manager: apt
+  directives:
+    - environment:
+        DEBIAN_FRONTEND: noninteractive
+    - install:
+        - ca-certificates
+        - burpsuite
+    - run:
+        - command -v burpsuite
+        - apt-get clean
+        - rm -rf /var/lib/apt/lists/*
+
+deploy:
+  bins:
+    - burpsuite
+
+readme: |
+  ## burpsuite/{{ context.version }}
+
+  Burp Suite Community Edition from Kali Linux.
+

@@ -1,0 +1,33 @@
+name: nikto
+version: "rolling"
+
+architectures:
+  - x86_64
+
+categories:
+  - vulnerability analysis
+
+build:
+  kind: neurodocker
+  base-image: kalilinux/kali-rolling:latest
+  pkg-manager: apt
+  directives:
+    - environment:
+        DEBIAN_FRONTEND: noninteractive
+    - install:
+        - ca-certificates
+        - nikto
+    - run:
+        - command -v nikto
+        - apt-get clean
+        - rm -rf /var/lib/apt/lists/*
+
+deploy:
+  bins:
+    - nikto
+
+readme: |
+  ## nikto/{{ context.version }}
+
+  Web server vulnerability scanner from Kali Linux.
+

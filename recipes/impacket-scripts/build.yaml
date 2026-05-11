@@ -1,0 +1,39 @@
+name: impacket-scripts
+version: "rolling"
+
+architectures:
+  - x86_64
+
+categories:
+  - post exploitation
+
+build:
+  kind: neurodocker
+  base-image: kalilinux/kali-rolling:latest
+  pkg-manager: apt
+  directives:
+    - environment:
+        DEBIAN_FRONTEND: noninteractive
+    - install:
+        - ca-certificates
+        - impacket-scripts
+    - run:
+        - command -v impacket-psexec
+        - command -v impacket-smbclient
+        - command -v impacket-secretsdump
+        - command -v impacket-wmiexec
+        - apt-get clean
+        - rm -rf /var/lib/apt/lists/*
+
+deploy:
+  bins:
+    - impacket-psexec
+    - impacket-smbclient
+    - impacket-secretsdump
+    - impacket-wmiexec
+
+readme: |
+  ## impacket-scripts/{{ context.version }}
+
+  Impacket protocol scripts from Kali Linux.
+

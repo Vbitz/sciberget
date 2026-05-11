@@ -1,0 +1,33 @@
+name: responder
+version: "rolling"
+
+architectures:
+  - x86_64
+
+categories:
+  - sniffing spoofing
+
+build:
+  kind: neurodocker
+  base-image: kalilinux/kali-rolling:latest
+  pkg-manager: apt
+  directives:
+    - environment:
+        DEBIAN_FRONTEND: noninteractive
+    - install:
+        - ca-certificates
+        - responder
+    - run:
+        - command -v responder
+        - apt-get clean
+        - rm -rf /var/lib/apt/lists/*
+
+deploy:
+  bins:
+    - responder
+
+readme: |
+  ## responder/{{ context.version }}
+
+  LLMNR, NBT-NS and MDNS responder suite from Kali Linux.
+

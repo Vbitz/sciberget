@@ -1,0 +1,17 @@
+{
+  "apps": {
+    "autopsy rolling": {
+      "version": "20260511",
+      "exec": "",
+      "apptainer_args": []
+    },
+    "autopsyGUI-autopsy rolling": {
+      "version": "20260511",
+      "exec": "autopsy",
+      "apptainer_args": []
+    }
+  },
+  "categories": [
+    "forensics"
+  ]
+}

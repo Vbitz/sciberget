@@ -1,0 +1,33 @@
+name: binwalk
+version: "rolling"
+
+architectures:
+  - x86_64
+
+categories:
+  - hardware
+
+build:
+  kind: neurodocker
+  base-image: kalilinux/kali-rolling:latest
+  pkg-manager: apt
+  directives:
+    - environment:
+        DEBIAN_FRONTEND: noninteractive
+    - install:
+        - ca-certificates
+        - binwalk
+    - run:
+        - command -v binwalk
+        - apt-get clean
+        - rm -rf /var/lib/apt/lists/*
+
+deploy:
+  bins:
+    - binwalk
+
+readme: |
+  ## binwalk/{{ context.version }}
+
+  Firmware analysis tool from Kali Linux.
+

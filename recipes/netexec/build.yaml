@@ -1,0 +1,33 @@
+name: netexec
+version: "rolling"
+
+architectures:
+  - x86_64
+
+categories:
+  - exploitation
+
+build:
+  kind: neurodocker
+  base-image: kalilinux/kali-rolling:latest
+  pkg-manager: apt
+  directives:
+    - environment:
+        DEBIAN_FRONTEND: noninteractive
+    - install:
+        - ca-certificates
+        - netexec
+    - run:
+        - command -v nxc
+        - apt-get clean
+        - rm -rf /var/lib/apt/lists/*
+
+deploy:
+  bins:
+    - nxc
+
+readme: |
+  ## netexec/{{ context.version }}
+
+  NetExec network service assessment suite from Kali Linux.
+

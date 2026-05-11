@@ -1,0 +1,37 @@
+name: zaproxy
+version: "rolling"
+
+architectures:
+  - x86_64
+
+categories:
+  - web applications
+
+gui_apps:
+  - name: zaproxyGUI
+    exec: zaproxy
+
+build:
+  kind: neurodocker
+  base-image: kalilinux/kali-rolling:latest
+  pkg-manager: apt
+  directives:
+    - environment:
+        DEBIAN_FRONTEND: noninteractive
+    - install:
+        - ca-certificates
+        - zaproxy
+    - run:
+        - command -v zaproxy
+        - apt-get clean
+        - rm -rf /var/lib/apt/lists/*
+
+deploy:
+  bins:
+    - zaproxy
+
+readme: |
+  ## zaproxy/{{ context.version }}
+
+  OWASP ZAP web application security testing tool from Kali Linux.
+

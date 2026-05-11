@@ -1,0 +1,33 @@
+name: enum4linux-ng
+version: "rolling"
+
+architectures:
+  - x86_64
+
+categories:
+  - information gathering
+
+build:
+  kind: neurodocker
+  base-image: kalilinux/kali-rolling:latest
+  pkg-manager: apt
+  directives:
+    - environment:
+        DEBIAN_FRONTEND: noninteractive
+    - install:
+        - ca-certificates
+        - enum4linux-ng
+    - run:
+        - command -v enum4linux-ng
+        - apt-get clean
+        - rm -rf /var/lib/apt/lists/*
+
+deploy:
+  bins:
+    - enum4linux-ng
+
+readme: |
+  ## enum4linux-ng/{{ context.version }}
+
+  SMB enumeration tool from Kali Linux.
+

@@ -1,0 +1,17 @@
+{
+  "apps": {
+    "ghidra rolling": {
+      "version": "20260511",
+      "exec": "",
+      "apptainer_args": []
+    },
+    "ghidraGUI-ghidra rolling": {
+      "version": "20260511",
+      "exec": "ghidra",
+      "apptainer_args": []
+    }
+  },
+  "categories": [
+    "reverse engineering"
+  ]
+}

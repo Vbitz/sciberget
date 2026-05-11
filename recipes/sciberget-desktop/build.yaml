@@ -1,0 +1,128 @@
+name: sciberget-desktop
+version: "0.1.0"
+
+architectures:
+  - x86_64
+
+categories:
+  - other
+
+build:
+  kind: neurodocker
+  base-image: ubuntu:24.04
+  pkg-manager: apt
+  directives:
+    - environment:
+        DEBIAN_FRONTEND: noninteractive
+        SCIBERGET_CVMFS_REPO: sciberget.example.org
+        SCIBERGET_LOCAL_CONTAINERS: /sciberget-storage/containers
+        GUACAMOLE_HOME: /etc/guacamole
+        CATALINA_HOME: /usr/local/tomcat
+        DISPLAY: ":1"
+    - install:
+        - build-essential
+        - ca-certificates
+        - curl
+        - dbus-x11
+        - falkon
+        - freerdp2-dev
+        - libcairo2-dev
+        - libjpeg-turbo8-dev
+        - libpng-dev
+        - libpango1.0-dev
+        - libssh2-1-dev
+        - libssl-dev
+        - libtool-bin
+        - libvncserver-dev
+        - libwebp-dev
+        - lmod
+        - openjdk-17-jre-headless
+        - openssl
+        - procps
+        - sudo
+        - tigervnc-common
+        - tigervnc-standalone-server
+        - tigervnc-tools
+        - wget
+        - x11-xserver-utils
+        - xterm
+        - lxde-core
+    - run:
+        - |
+          curl -fsSL "https://archive.apache.org/dist/guacamole/1.6.0/source/guacamole-server-1.6.0.tar.gz" -o /tmp/guacamole-server.tar.gz
+          tar -xzf /tmp/guacamole-server.tar.gz -C /tmp
+          cd /tmp/guacamole-server-1.6.0
+          ./configure --with-init-dir=/etc/init.d
+          make -j"$(nproc)"
+          make install
+          ldconfig
+          rm -rf /tmp/guacamole-server-1.6.0 /tmp/guacamole-server.tar.gz
+    - run:
+        - |
+          wget -q https://cvmrepo.s3.cern.ch/cvmrepo/apt/cvmfs-release-latest_all.deb -O /tmp/cvmfs-release.deb
+          dpkg -i /tmp/cvmfs-release.deb
+          rm /tmp/cvmfs-release.deb
+          apt-get update
+          apt-get install -y --no-install-recommends autofs cvmfs fuse-overlayfs singularity-container squashfuse
+          if ! command -v apptainer >/dev/null 2>&1 && command -v singularity >/dev/null 2>&1; then
+              ln -s "$(command -v singularity)" /usr/local/bin/apptainer;
+          fi
+          apt-get clean
+          rm -rf /var/lib/apt/lists/*
+    - run:
+        - |
+          curl -fsSL "https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.116/bin/apache-tomcat-9.0.116.tar.gz" -o /tmp/tomcat.tar.gz
+          tar -xzf /tmp/tomcat.tar.gz -C /usr/local
+          mv /usr/local/apache-tomcat-9.0.116 /usr/local/tomcat
+          rm /tmp/tomcat.tar.gz
+          rm -rf /usr/local/tomcat/webapps/*
+          curl -fsSL "https://archive.apache.org/dist/guacamole/1.6.0/binary/guacamole-1.6.0.war" -o /usr/local/tomcat/webapps/ROOT.war
+    - copy:
+        - config
+        - /tmp/sciberget-config
+    - copy:
+        - command
+        - /sciberget-command
+    - copy:
+        - apps.json
+        - /sciberget-command/apps.json
+    - copy:
+        - start-desktop.sh
+        - /usr/local/bin/start-sciberget-desktop
+    - run:
+        - |
+          useradd -m -s /bin/bash sciberget
+          echo "sciberget ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/sciberget
+          chmod 0440 /etc/sudoers.d/sciberget
+          mkdir -p /etc/guacamole /sciberget-storage /etc/cvmfs/config.d /etc/cvmfs/keys/sciberget
+          cp /tmp/sciberget-config/guacamole/* /etc/guacamole/
+          cp /tmp/sciberget-config/cvmfs/default.local /etc/cvmfs/default.local
+          cp /tmp/sciberget-config/cvmfs/sciberget.example.org.conf /etc/cvmfs/config.d/sciberget.example.org.conf
+          cp /tmp/sciberget-config/cvmfs/sciberget.example.org.pub /etc/cvmfs/keys/sciberget/sciberget.example.org.pub
+          cp /tmp/sciberget-config/lmod/module.sh /usr/share/module.sh
+          cp /tmp/sciberget-config/lxde/xstartup /home/sciberget/.vnc-xstartup
+          chown -R sciberget:sciberget /etc/guacamole /usr/local/tomcat /sciberget-storage /sciberget-command /home/sciberget
+          chmod -R a+rX /usr/local/tomcat
+          chmod +x /sciberget-command/*.sh /home/sciberget/.vnc-xstartup /usr/local/bin/start-sciberget-desktop
+    - user: sciberget
+    - workdir: /home/sciberget
+    - entrypoint: /usr/local/bin/start-sciberget-desktop
+
+readme: |
+  ## sciberget-desktop/{{ context.version }}
+
+  Browser-accessible sci-ber-get desktop host with Guacamole, TigerVNC, LXDE,
+  CVMFS, Apptainer/Singularity, Lmod, and the sci-ber-get command layer.
+
+  Local build:
+  ```
+  python3 builder/build.py generate sciberget-desktop --recreate
+  docker build -f build/sciberget-desktop/sciberget-desktop_0.1.0.Dockerfile \
+    -t sciberget-desktop:latest build/sciberget-desktop
+  docker run --rm -it --privileged --shm-size=1g -p 8080:8080 \
+    -v "$HOME/sciberget-storage:/sciberget-storage" sciberget-desktop:latest
+  ```
+
+  Open http://localhost:8080/ and log in with user `sciberget`. The generated
+  VNC password is written inside the container at
+  `/home/sciberget/.vnc/plaintext-password`, or set `SCIBERGET_VNC_PASSWORD`.

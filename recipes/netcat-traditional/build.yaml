@@ -1,0 +1,33 @@
+name: netcat-traditional
+version: "rolling"
+
+architectures:
+  - x86_64
+
+categories:
+  - exploitation
+
+build:
+  kind: neurodocker
+  base-image: kalilinux/kali-rolling:latest
+  pkg-manager: apt
+  directives:
+    - environment:
+        DEBIAN_FRONTEND: noninteractive
+    - install:
+        - ca-certificates
+        - netcat-traditional
+    - run:
+        - command -v nc
+        - apt-get clean
+        - rm -rf /var/lib/apt/lists/*
+
+deploy:
+  bins:
+    - nc
+
+readme: |
+  ## netcat-traditional/{{ context.version }}
+
+  Traditional Netcat utility from Kali Linux.
+

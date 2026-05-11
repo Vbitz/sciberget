@@ -1,0 +1,100 @@
+<!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"
+ "http://www.freedesktop.org/standards/menu-spec/1.0/menu.dtd">
+
+<Menu>
+	<Name>Applications</Name>
+	<Menu>
+		<Name>sci-ber-get</Name>
+		<Directory>sciberget/sciberget.directory</Directory>
+		<Include>
+			<Category>sci-ber-get</Category>
+		</Include>
+		<Menu>
+			<Name>All Applications</Name>
+			<Directory>sciberget/all-applications.directory</Directory>
+			<Include>
+				<Category>All-Applications</Category>
+			</Include>
+		</Menu>
+		<Menu>
+			<Name>Information Gathering</Name>
+			<Directory>sciberget/information-gathering.directory</Directory>
+			<Include><And><Category>information-gathering</Category></And></Include>
+		</Menu>
+		<Menu>
+			<Name>Vulnerability Analysis</Name>
+			<Directory>sciberget/vulnerability-analysis.directory</Directory>
+			<Include><And><Category>vulnerability-analysis</Category></And></Include>
+		</Menu>
+		<Menu>
+			<Name>Web Applications</Name>
+			<Directory>sciberget/web-applications.directory</Directory>
+			<Include><And><Category>web-applications</Category></And></Include>
+		</Menu>
+		<Menu>
+			<Name>Database Assessment</Name>
+			<Directory>sciberget/database-assessment.directory</Directory>
+			<Include><And><Category>database-assessment</Category></And></Include>
+		</Menu>
+		<Menu>
+			<Name>Password Attacks</Name>
+			<Directory>sciberget/password-attacks.directory</Directory>
+			<Include><And><Category>password-attacks</Category></And></Include>
+		</Menu>
+		<Menu>
+			<Name>Wireless</Name>
+			<Directory>sciberget/wireless.directory</Directory>
+			<Include><And><Category>wireless</Category></And></Include>
+		</Menu>
+		<Menu>
+			<Name>Reverse Engineering</Name>
+			<Directory>sciberget/reverse-engineering.directory</Directory>
+			<Include><And><Category>reverse-engineering</Category></And></Include>
+		</Menu>
+		<Menu>
+			<Name>Exploitation</Name>
+			<Directory>sciberget/exploitation.directory</Directory>
+			<Include><And><Category>exploitation</Category></And></Include>
+		</Menu>
+		<Menu>
+			<Name>Sniffing Spoofing</Name>
+			<Directory>sciberget/sniffing-spoofing.directory</Directory>
+			<Include><And><Category>sniffing-spoofing</Category></And></Include>
+		</Menu>
+		<Menu>
+			<Name>Post Exploitation</Name>
+			<Directory>sciberget/post-exploitation.directory</Directory>
+			<Include><And><Category>post-exploitation</Category></And></Include>
+		</Menu>
+		<Menu>
+			<Name>Forensics</Name>
+			<Directory>sciberget/forensics.directory</Directory>
+			<Include><And><Category>forensics</Category></And></Include>
+		</Menu>
+		<Menu>
+			<Name>Reporting</Name>
+			<Directory>sciberget/reporting.directory</Directory>
+			<Include><And><Category>reporting</Category></And></Include>
+		</Menu>
+		<Menu>
+			<Name>Crypto Stego</Name>
+			<Directory>sciberget/crypto-stego.directory</Directory>
+			<Include><And><Category>crypto-stego</Category></And></Include>
+		</Menu>
+		<Menu>
+			<Name>Hardware</Name>
+			<Directory>sciberget/hardware.directory</Directory>
+			<Include><And><Category>hardware</Category></And></Include>
+		</Menu>
+		<Menu>
+			<Name>Fuzzing</Name>
+			<Directory>sciberget/fuzzing.directory</Directory>
+			<Include><And><Category>fuzzing</Category></And></Include>
+		</Menu>
+		<Menu>
+			<Name>Other</Name>
+			<Directory>sciberget/other.directory</Directory>
+			<Include><And><Category>other</Category></And></Include>
+		</Menu>
+	</Menu>
+</Menu>
