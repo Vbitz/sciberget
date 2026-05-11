@@ -56,11 +56,13 @@ jobs:
       - name: Derive image name
         id: image
         run: |
-          version="$(python -c 'import os, yaml; print(yaml.safe_load(open(f"recipes/{os.environ[\"APPLICATION\"]}/build.yaml"))["version"])')"
+          version="$(python -c 'import os, yaml; print(yaml.safe_load(open("recipes/" + os.environ["APPLICATION"] + "/build.yaml"))["version"])')"
           image="$(echo "${APPLICATION}_${version}" | tr '[:upper:]' '[:lower:]')"
-          ref="ghcr.io/${GITHUB_REPOSITORY}/${image}:latest"
+          repository="$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')"
+          ref="ghcr.io/${repository}/${image}:latest"
           echo "version=${version}" >> "$GITHUB_OUTPUT"
           echo "image=${image}" >> "$GITHUB_OUTPUT"
+          echo "repository=${repository}" >> "$GITHUB_OUTPUT"
           echo "ref=${ref}" >> "$GITHUB_OUTPUT"
       - uses: docker/login-action@v4
         if: env.PUSH_IMAGE == 'true'
@@ -73,8 +75,8 @@ jobs:
         run: |
           docker buildx build "build/${APPLICATION}" \
             --file "build/${APPLICATION}/${{ steps.image.outputs.image }}.Dockerfile" \
-            --tag "ghcr.io/${GITHUB_REPOSITORY}/${{ steps.image.outputs.image }}:${GITHUB_SHA::12}" \
-            --tag "ghcr.io/${GITHUB_REPOSITORY}/${{ steps.image.outputs.image }}:latest" \
+            --tag "ghcr.io/${{ steps.image.outputs.repository }}/${{ steps.image.outputs.image }}:${GITHUB_SHA::12}" \
+            --tag "ghcr.io/${{ steps.image.outputs.repository }}/${{ steps.image.outputs.image }}:latest" \
             $([[ "${PUSH_IMAGE}" == "true" ]] && echo "--push" || echo "--load")
       - uses: ./.github/actions/setup-apptainer
         if: env.BUILD_SIF == 'true'

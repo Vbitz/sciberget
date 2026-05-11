@@ -37,6 +37,11 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Derive image repository
+        id: image
+        run: |
+          repository="$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')"
+          echo "repository=${repository}" >> "$GITHUB_OUTPUT"
       - uses: docker/build-push-action@v7
         with:
           context: build/sciberget-cvmfs-server
@@ -44,5 +49,5 @@ jobs:
           platforms: linux/amd64
           push: ${{ github.event_name == 'push' || inputs.push }}
           tags: |
-            ghcr.io/${{ github.repository }}/sciberget-cvmfs-server:latest
-            ghcr.io/${{ github.repository }}/sciberget-cvmfs-server:${{ github.sha }}
+            ghcr.io/${{ steps.image.outputs.repository }}/sciberget-cvmfs-server:latest
+            ghcr.io/${{ steps.image.outputs.repository }}/sciberget-cvmfs-server:${{ github.sha }}

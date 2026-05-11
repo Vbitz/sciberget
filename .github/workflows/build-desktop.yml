@@ -38,6 +38,11 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Derive image repository
+        id: image
+        run: |
+          repository="$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')"
+          echo "repository=${repository}" >> "$GITHUB_OUTPUT"
       - uses: docker/build-push-action@v7
         with:
           context: build/sciberget-desktop
@@ -45,5 +50,5 @@ jobs:
           platforms: linux/amd64
           push: ${{ github.event_name == 'push' || inputs.push }}
           tags: |
-            ghcr.io/${{ github.repository }}/sciberget-desktop:latest
-            ghcr.io/${{ github.repository }}/sciberget-desktop:${{ github.sha }}
+            ghcr.io/${{ steps.image.outputs.repository }}/sciberget-desktop:latest
+            ghcr.io/${{ steps.image.outputs.repository }}/sciberget-desktop:${{ github.sha }}

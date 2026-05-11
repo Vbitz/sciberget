@@ -1,6 +1,13 @@
 name: Auto build
 
 on:
+  workflow_dispatch:
+    inputs:
+      all:
+        description: Build all tool recipes
+        required: false
+        type: boolean
+        default: false
   push:
     branches: [main]
     paths:
@@ -22,12 +29,21 @@ jobs:
           fetch-depth: 0
       - id: find
         run: |
-          base="${{ github.event.before }}"
-          if [[ -z "$base" || "$base" == "0000000000000000000000000000000000000000" ]]; then
-            base="HEAD~1"
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.all }}" == "true" ]]; then
+            apps="$(find recipes -mindepth 2 -maxdepth 2 -name build.yaml \
+              | cut -d/ -f2 \
+              | grep -Ev '^(sciberget-cvmfs-server|sciberget-desktop)$' \
+              | sort -u | jq -R . | jq -sc .)"
+          else
+            base="${{ github.event.before }}"
+            if [[ -z "$base" || "$base" == "0000000000000000000000000000000000000000" ]]; then
+              base="HEAD~1"
+            fi
+            apps="$(git diff --name-only "$base" HEAD -- 'recipes/*/build.yaml' \
+              | cut -d/ -f2 \
+              | grep -Ev '^(sciberget-cvmfs-server|sciberget-desktop)$' \
+              | sort -u | jq -R . | jq -sc .)"
           fi
-          apps="$(git diff --name-only "$base" HEAD -- 'recipes/*/build.yaml' \
-            | cut -d/ -f2 | sort -u | jq -R . | jq -sc .)"
           [[ "$apps" == "[]" ]] && apps='["nmap"]'
           echo "apps=${apps}" >> "$GITHUB_OUTPUT"
   build:
@@ -41,4 +57,3 @@ jobs:
       application: ${{ matrix.application }}
       push: true
     secrets: inherit
-
