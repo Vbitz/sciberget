@@ -1,5 +1,5 @@
 <user-mapping>
-    <authorize username="sciberget" password="sciberget">
+    <authorize username="sciberget" password="SCIBERGET_GUACAMOLE_PASSWORD">
         <connection name="sci-ber-get Desktop">
             <protocol>vnc</protocol>
             <param name="hostname">127.0.0.1</param>

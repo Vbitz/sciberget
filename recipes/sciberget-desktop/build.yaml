@@ -25,6 +25,7 @@ build:
         - curl
         - dbus-x11
         - falkon
+        - jq
         - freerdp2-dev
         - libcairo2-dev
         - libjpeg-turbo8-dev
@@ -36,6 +37,7 @@ build:
         - libvncserver-dev
         - libwebp-dev
         - lmod
+        - lxterminal
         - openjdk-17-jre-headless
         - openssl
         - procps
@@ -49,7 +51,8 @@ build:
         - lxde-core
     - run:
         - |
-          curl -fsSL "https://archive.apache.org/dist/guacamole/1.6.0/source/guacamole-server-1.6.0.tar.gz" -o /tmp/guacamole-server.tar.gz
+          curl --fail --show-error --location --retry 5 --retry-delay 5 --connect-timeout 20 --max-time 300 "https://downloads.apache.org/guacamole/1.6.0/source/guacamole-server-1.6.0.tar.gz" -o /tmp/guacamole-server.tar.gz \
+            || curl --fail --show-error --location --retry 5 --retry-delay 5 --connect-timeout 20 --max-time 300 "https://archive.apache.org/dist/guacamole/1.6.0/source/guacamole-server-1.6.0.tar.gz" -o /tmp/guacamole-server.tar.gz
           tar -xzf /tmp/guacamole-server.tar.gz -C /tmp
           cd /tmp/guacamole-server-1.6.0
           ./configure --with-init-dir=/etc/init.d
@@ -71,12 +74,14 @@ build:
           rm -rf /var/lib/apt/lists/*
     - run:
         - |
-          curl -fsSL "https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.116/bin/apache-tomcat-9.0.116.tar.gz" -o /tmp/tomcat.tar.gz
+          curl --fail --show-error --location --retry 5 --retry-delay 5 --connect-timeout 20 --max-time 300 "https://downloads.apache.org/tomcat/tomcat-9/v9.0.118/bin/apache-tomcat-9.0.118.tar.gz" -o /tmp/tomcat.tar.gz \
+            || curl --fail --show-error --location --retry 5 --retry-delay 5 --connect-timeout 20 --max-time 300 "https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.118/bin/apache-tomcat-9.0.118.tar.gz" -o /tmp/tomcat.tar.gz
           tar -xzf /tmp/tomcat.tar.gz -C /usr/local
-          mv /usr/local/apache-tomcat-9.0.116 /usr/local/tomcat
+          mv /usr/local/apache-tomcat-9.0.118 /usr/local/tomcat
           rm /tmp/tomcat.tar.gz
           rm -rf /usr/local/tomcat/webapps/*
-          curl -fsSL "https://archive.apache.org/dist/guacamole/1.6.0/binary/guacamole-1.6.0.war" -o /usr/local/tomcat/webapps/ROOT.war
+          curl --fail --show-error --location --retry 5 --retry-delay 5 --connect-timeout 20 --max-time 300 "https://downloads.apache.org/guacamole/1.6.0/binary/guacamole-1.6.0.war" -o /usr/local/tomcat/webapps/ROOT.war \
+            || curl --fail --show-error --location --retry 5 --retry-delay 5 --connect-timeout 20 --max-time 300 "https://archive.apache.org/dist/guacamole/1.6.0/binary/guacamole-1.6.0.war" -o /usr/local/tomcat/webapps/ROOT.war
     - copy:
         - config
         - /tmp/sciberget-config
@@ -89,6 +94,9 @@ build:
     - copy:
         - start-desktop.sh
         - /usr/local/bin/start-sciberget-desktop
+    - copy:
+        - install-desktop-integration.py
+        - /usr/local/bin/install-sciberget-desktop-integration
     - run:
         - |
           useradd -m -s /bin/bash sciberget
@@ -101,6 +109,32 @@ build:
           cp /tmp/sciberget-config/cvmfs/sciberget.example.org.pub /etc/cvmfs/keys/sciberget/sciberget.example.org.pub
           cp /tmp/sciberget-config/lmod/module.sh /usr/share/module.sh
           cp /tmp/sciberget-config/lxde/xstartup /home/sciberget/.vnc-xstartup
+          printf '%s\n' \
+            'if [ -f /usr/share/module.sh ]; then' \
+            '    . /usr/share/module.sh' \
+            'fi' \
+            'export SCIBERGET_LOCAL_CONTAINERS="${SCIBERGET_LOCAL_CONTAINERS:-/sciberget-storage/containers}"' \
+            'export SCIBERGET_CVMFS_REPO="${SCIBERGET_CVMFS_REPO:-sciberget.example.org}"' \
+            'export CVMFS_MODULES="/cvmfs/${SCIBERGET_CVMFS_REPO}/sciberget-modules"' \
+            'export OFFLINE_MODULES="${SCIBERGET_LOCAL_CONTAINERS}/modules"' \
+            'export APPTAINER_BINDPATH="${APPTAINER_BINDPATH:-/data,/mnt,/sciberget-storage,/tmp,/cvmfs}"' \
+            'export SINGULARITY_BINDPATH="${SINGULARITY_BINDPATH:-${APPTAINER_BINDPATH}}"' \
+            'if command -v module >/dev/null 2>&1; then' \
+            '    if [ -d "${CVMFS_MODULES}" ]; then' \
+            '        for module_dir in "${CVMFS_MODULES}"/*; do' \
+            '            [ -d "${module_dir}" ] && module use "${module_dir}" >/dev/null 2>&1' \
+            '        done' \
+            '    fi' \
+            '    [ -d "${OFFLINE_MODULES}" ] && module use "${OFFLINE_MODULES}" >/dev/null 2>&1' \
+            'fi' \
+            > /etc/profile.d/sciberget.sh
+          printf '\n%s\n%s\n%s\n' \
+            'if [ -f /etc/profile.d/sciberget.sh ]; then' \
+            '    . /etc/profile.d/sciberget.sh' \
+            'fi' \
+            >> /home/sciberget/.bashrc
+          chmod +x /usr/local/bin/install-sciberget-desktop-integration
+          /usr/local/bin/install-sciberget-desktop-integration
           chown -R sciberget:sciberget /etc/guacamole /usr/local/tomcat /sciberget-storage /sciberget-command /home/sciberget
           chmod -R a+rX /usr/local/tomcat
           chmod +x /sciberget-command/*.sh /home/sciberget/.vnc-xstartup /usr/local/bin/start-sciberget-desktop
@@ -124,5 +158,5 @@ readme: |
   ```
 
   Open http://localhost:8080/ and log in with user `sciberget`. The generated
-  VNC password is written inside the container at
-  `/home/sciberget/.vnc/plaintext-password`, or set `SCIBERGET_VNC_PASSWORD`.
+  password is printed in the container logs and written inside the container at
+  `/home/sciberget/.vnc/plaintext-password`, or set `SCIBERGET_DESKTOP_PASSWORD`.

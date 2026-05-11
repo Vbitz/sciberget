@@ -1,8 +1,9 @@
-.PHONY: validate generate build release apps-json cvmfs-log desktop desktop-run cvmfs-server cvmfs-server-run
+.PHONY: validate generate build release apps-json cvmfs-log desktop desktop-run cvmfs-server cvmfs-server-run e2e-compose e2e-compose-down
 
 APP ?= nmap
 IMAGE ?= sciberget-desktop:latest
 CVMFS_SERVER_IMAGE ?= sciberget-cvmfs-server:latest
+E2E_APPS ?= nmap
 
 validate:
 	@for f in recipes/*/build.yaml; do python3 builder/validation.py "$$f"; done
@@ -45,3 +46,9 @@ cvmfs-server-run:
 		-v sciberget-cvmfs-spool:/var/spool/cvmfs \
 		-v sciberget-cvmfs-etc:/etc/cvmfs \
 		"$(CVMFS_SERVER_IMAGE)"
+
+e2e-compose:
+	SCIBERGET_E2E_APPS="$(E2E_APPS)" tests/e2e/run-compose-e2e.sh
+
+e2e-compose-down:
+	docker compose -f tests/e2e/docker-compose.cvmfs-desktop.yml down -v

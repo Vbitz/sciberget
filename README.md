@@ -15,6 +15,7 @@ The current implementation includes:
 - Configurable CVMFS Stratum 0 scripts in `cvmfs/`.
 - A Jupyter-free Guacamole desktop recipe in `recipes/sciberget-desktop/`.
 - A hostable local-network CVMFS server recipe in `recipes/sciberget-cvmfs-server/`.
+- A Docker Compose end-to-end CVMFS plus desktop test in `tests/e2e/`.
 - MVP GitHub Actions for recipe validation, app builds, catalogue generation,
   desktop builds, and CVMFS script checks.
 
@@ -28,7 +29,12 @@ make desktop
 make desktop-run
 make cvmfs-server
 make cvmfs-server-run
+make e2e-compose
+make e2e-compose-down
 ```
 
-See `PLAN.md` for the implementation plan and `docs/` for architecture,
-recipe, and CVMFS operator notes.
+Use `make e2e-compose E2E_APPS=nmap,ffuf` to publish and test a configurable
+subset of tools. The Guacamole username is `sciberget`; the desktop password is
+generated at container startup and printed in the container logs unless
+`SCIBERGET_DESKTOP_PASSWORD` is set. See `PLAN.md` for the implementation plan
+and `docs/` for architecture, recipe, CVMFS operator, and E2E compose notes.

@@ -1,0 +1,61 @@
+services:
+  cvmfs-server:
+    image: sciberget-cvmfs-server:e2e
+    build:
+      context: ../../build/sciberget-cvmfs-server
+      dockerfile: sciberget-cvmfs-server_0.1.0.Dockerfile
+    privileged: true
+    environment:
+      SCIBERGET_CVMFS_REPO: ${SCIBERGET_CVMFS_REPO:-sciberget.local}
+      SCIBERGET_PUBLIC_URL: http://cvmfs-server/cvmfs/@fqrn@
+    ports:
+      - "${SCIBERGET_E2E_CVMFS_PORT:-8081}:80"
+    volumes:
+      - cvmfs-srv:/srv/cvmfs
+      - cvmfs-spool:/var/spool/cvmfs
+      - cvmfs-etc:/etc/cvmfs
+      - ../../:/workspace:ro
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - curl -fsS "http://127.0.0.1/cvmfs/$${SCIBERGET_CVMFS_REPO}/.cvmfswhitelist" >/dev/null
+      interval: 5s
+      timeout: 5s
+      retries: 60
+
+  desktop:
+    image: sciberget-desktop:e2e
+    build:
+      context: ../../build/sciberget-desktop
+      dockerfile: sciberget-desktop_0.1.0.Dockerfile
+    user: root
+    privileged: true
+    depends_on:
+      cvmfs-server:
+        condition: service_healthy
+    environment:
+      SCIBERGET_CVMFS_REPO: ${SCIBERGET_CVMFS_REPO:-sciberget.local}
+      SCIBERGET_CVMFS_SERVER_URL: http://cvmfs-server/cvmfs/@fqrn@
+      SCIBERGET_CVMFS_KEY_SOURCE: /server-cvmfs-etc
+      SCIBERGET_CVMFS_MOUNT: "true"
+      SCIBERGET_CVMFS_REQUIRED: "true"
+      SCIBERGET_DESKTOP_PASSWORD: ${SCIBERGET_DESKTOP_PASSWORD:-}
+    ports:
+      - "${SCIBERGET_E2E_DESKTOP_PORT:-8080}:8080"
+    volumes:
+      - cvmfs-etc:/server-cvmfs-etc:ro
+      - desktop-storage:/sciberget-storage
+      - ../../:/workspace:ro
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - curl -fsS http://127.0.0.1:8080/ >/dev/null
+      interval: 10s
+      timeout: 5s
+      retries: 60
+
+volumes:
+  cvmfs-srv:
+  cvmfs-spool:
+  cvmfs-etc:
+  desktop-storage:
